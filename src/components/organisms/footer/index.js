@@ -37,10 +37,18 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/#converter"
+                  href="/"
                   className="text-sm text-gray-500 hover:text-violet-600 dark:text-gray-400 dark:hover:text-violet-400 transition-colors"
                 >
                   Image Converter
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/bg-remover"
+                  className="text-sm text-gray-500 hover:text-violet-600 dark:text-gray-400 dark:hover:text-violet-400 transition-colors"
+                >
+                  Remove BG
                 </Link>
               </li>
               <li>
