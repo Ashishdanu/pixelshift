@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Button from "@/components/atoms/button";
 import CheckerboardBackground from "../_components/checkerboard";
+import { trackEvent } from "@/utils/g-tag";
 
 function formatBytes(bytes) {
   if (bytes === 0) return "0 B";
@@ -45,6 +46,7 @@ export default function ConverterSection() {
     setProgressLabel("Analyzing image…");
     setStatus("processing");
     setErrorMsg("");
+    trackEvent("bg_remover_upload");
 
     try {
       // Dynamic import — keeps the WASM out of the initial bundle
@@ -74,10 +76,12 @@ export default function ConverterSection() {
       setResultSrc(url);
       setProgress(100);
       setStatus("done");
+      trackEvent("bg_remover_success");
     } catch (err) {
       console.error(err);
       setErrorMsg("Something went wrong. Please try a different image.");
       setStatus("error");
+      trackEvent("bg_remover_error", { message: err?.message || "unknown" });
     }
   }, []);
 
@@ -108,6 +112,7 @@ export default function ConverterSection() {
     setProgressLabel("");
     setErrorMsg("");
     if (fileInputRef.current) fileInputRef.current.value = "";
+    trackEvent("bg_remover_reset");
   };
 
   const handleDownload = () => {
@@ -118,6 +123,7 @@ export default function ConverterSection() {
     a.download = `${originalFileName}-pixelshift.png`;
     a.click();
     URL.revokeObjectURL(url);
+    trackEvent("bg_remover_download");
   };
 
   return (
