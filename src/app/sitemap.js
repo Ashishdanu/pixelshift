@@ -20,5 +20,11 @@ export default function sitemap() {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/bg-remover`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
   ];
 }
