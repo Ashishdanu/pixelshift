@@ -113,7 +113,7 @@ export default function FileUploadBox({
             <span className="text-violet-600 dark:text-violet-400">
               Click to upload
             </span>{" "}
-            or drag and drop
+            or drag and drop or copy paste image
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             JPG, PNG, or WebP • Max {maxSizeMB}MB

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import FileUploadBox from "@/components/molecules/file-upload-box";
 import FormatSelector from "@/components/molecules/format-selector";
 import QualitySlider from "@/components/molecules/quality-slider";
@@ -137,6 +137,31 @@ export default function ConverterSection() {
     // GA: Track reset
     trackEvent("image_reset");
   }, [cleanup]);
+
+  useEffect(() => {
+    const handlePaste = (e) => {
+      // Don't interrupt if we are actively converting out of precaution
+      if (isConverting) return;
+      
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      const files = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith("image/")) {
+          files.push(items[i].getAsFile());
+        }
+      }
+
+      if (files.length > 0) {
+        // The converter's handleFileSelect expects a single file instead of an array
+        handleFileSelect(files[0]);
+      }
+    };
+
+    document.addEventListener("paste", handlePaste);
+    return () => document.removeEventListener("paste", handlePaste);
+  }, [isConverting, handleFileSelect]);
 
   const showQuality = outputFormat !== "image/png";
 
