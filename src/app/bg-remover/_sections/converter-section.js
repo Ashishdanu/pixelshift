@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Button from "@/components/atoms/button";
 import CheckerboardBackground from "../_components/checkerboard";
 import { trackEvent } from "@/utils/g-tag";
@@ -101,6 +101,30 @@ export default function ConverterSection() {
     [handleFiles]
   );
 
+  useEffect(() => {
+    const handlePaste = (e) => {
+      // Only process paste if we are actively idle
+      if (status !== "idle") return;
+      
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      const files = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith("image/")) {
+          files.push(items[i].getAsFile());
+        }
+      }
+
+      if (files.length > 0) {
+        handleFiles(files);
+      }
+    };
+
+    document.addEventListener("paste", handlePaste);
+    return () => document.removeEventListener("paste", handlePaste);
+  }, [status, handleFiles]);
+
   const handleReset = () => {
     setOriginalSrc(null);
     setResultBlob(null);
@@ -155,10 +179,10 @@ export default function ConverterSection() {
 
             <div>
               <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                {isDragging ? "Drop your image here" : "Drag & drop your image"}
+                {isDragging ? "Drop your image here" : "Drag, drop, or paste your image"}
               </p>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                or <span className="text-violet-600 dark:text-violet-400 font-medium underline underline-offset-2">click to browse</span>
+                or <span className="text-violet-600 dark:text-violet-400 font-medium underline underline-offset-2">click to browse</span> (Ctrl+V supported)
               </p>
               <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
                 JPG, PNG, WebP — any resolution

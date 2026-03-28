@@ -2,11 +2,20 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/context/theme-context";
 import { trackEvent } from "@/utils/g-tag";
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
+
+  const isConverterActive = pathname === "/";
+  const isBgRemoverActive = pathname.startsWith("/bg-remover");
+
+  const baseNavClass = "flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-colors";
+  const inactiveNavClass = "text-gray-600 hover:text-violet-700 hover:bg-violet-50 dark:text-gray-400 dark:hover:text-violet-300 dark:hover:bg-violet-950/30";
+  const activeNavClass = "text-violet-700 bg-violet-50 dark:text-violet-300 dark:bg-violet-950/30";
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-gray-200/60 dark:border-gray-800/60 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl">
@@ -36,7 +45,7 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={() => trackEvent("nav_image_converter")}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-gray-600 hover:text-violet-700 hover:bg-violet-50 dark:text-gray-400 dark:hover:text-violet-300 dark:hover:bg-violet-950/30 transition-colors"
+            className={`${baseNavClass} ${isConverterActive ? activeNavClass : inactiveNavClass}`}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -46,7 +55,7 @@ export default function Navbar() {
           <Link
             href="/bg-remover"
             onClick={() => trackEvent("nav_bg_remover")}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-gray-600 hover:text-violet-700 hover:bg-violet-50 dark:text-gray-400 dark:hover:text-violet-300 dark:hover:bg-violet-950/30 transition-colors"
+            className={`${baseNavClass} ${isBgRemoverActive ? activeNavClass : inactiveNavClass}`}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
